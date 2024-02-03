@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".acticity.AboutActivity">
 
 
@@ -12,10 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/md_theme_light_surfaceVariant"
-        android:fitsSystemWindows="false"
+        android:fitsSystemWindows="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:liftOnScroll="true"
         app:liftOnScrollColor="@color/md_theme_light_surfaceVariant">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -37,45 +39,269 @@
         app:layout_anchorGravity="center"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:paddingBottom="15dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="15dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/linearLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="190dp"
+                    android:backgroundTint="@color/md_theme_light_surfaceVariant"
+                    android:orientation="vertical"
+                    app:cardCornerRadius="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeWidth="0dp" />
+
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardView"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:cardCornerRadius="100dp"
+                    app:cardElevation="5dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+                    app:layout_constraintEnd_toEndOf="@+id/materialCardView2"
+                    app:layout_constraintStart_toStartOf="@+id/materialCardView2"
+                    app:layout_constraintTop_toTopOf="@+id/linearLayout2"
+                    app:strokeColor="@color/md_theme_dark_outline"
+                    app:strokeWidth="1dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/user" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView2"
+                    style="?attr/materialCardViewOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="-120dp"
+                    android:padding="10dp"
+                    app:cardCornerRadius="10dp"
+                    app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
+                    app:layout_constraintStart_toStartOf="@+id/linearLayout2"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+                    app:strokeColor="@color/md_theme_light_surfaceVariant">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:paddingTop="80dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="General Store"
+                            android:textAppearance="?attr/textAppearanceTitleSmall" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Jeel Patel"
+                            android:textAppearance="?attr/textAppearanceTitleSmall" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:elevation="3dp"
+                            android:gravity="center"
+                            android:text="Iris Waston P.O Box 83 8562 Fusce Rd. Fredrisk Nebraska 20720 (372) 587-2335"
+                            android:textAppearance="?attr/textAppearanceBody2" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="5dp"
+                            android:gravity="center">
+
+                            <Button
+                                style="?attr/materialIconButtonFilledTonalStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="5dp"
+                                app:icon="@drawable/phone_call_24" />
+
+                            <Button
+                                style="?attr/materialIconButtonFilledTonalStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="5dp"
+                                app:icon="@drawable/social" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="5dp"
+                            android:gravity="center">
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="5dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="CATEGORIES"
+                                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+                                <TextView
+                                    android:id="@+id/categoriesCount"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textAlignment="center" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="5dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="PRODUCTS"
+                                    android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+                                <TextView
+                                    android:id="@+id/productCount"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textAlignment="center" />
+
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="8dp"
+                android:text="Documents"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
 
             <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="230dp"
-                android:background="@color/md_theme_light_surfaceVariant"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="6dp">
 
-            <com.google.android.material.card.MaterialCardView
-                style="?attr/materialCardViewOutlinedStyle"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:padding="10dp"
-                app:cardCornerRadius="100dp"
-                app:layout_constraintEnd_toEndOf="@+id/cardView"
-                app:layout_constraintStart_toStartOf="@+id/cardView"
-                app:layout_constraintTop_toTopOf="parent" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/documents"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="match_parent"
-                android:layout_height="230dp"
+                <!--                <com.google.android.material.card.MaterialCardView-->
+                <!--                    android:layout_width="0dp"-->
+                <!--                    android:layout_height="220dp"-->
+                <!--                    android:layout_margin="6dp"-->
+                <!--                    android:layout_weight="1">-->
+
+                <!--                    <ImageView-->
+                <!--                        android:layout_gravity="center"-->
+                <!--                        android:layout_width="400dp"-->
+                <!--                        android:layout_height="330dp"-->
+                <!--                        android:src="@drawable/p1" />-->
+
+
+                <!--                </com.google.android.material.card.MaterialCardView>-->
+
+                <!--                <com.google.android.material.card.MaterialCardView-->
+                <!--                    android:layout_width="0dp"-->
+                <!--                    android:layout_height="220dp"-->
+                <!--                    android:layout_margin="6dp"-->
+                <!--                    android:layout_weight="1">-->
+
+
+                <!--                    <ImageView-->
+                <!--                        android:layout_width="360dp"-->
+                <!--                        android:layout_height="390dp"-->
+                <!--                        android:layout_gravity="center"-->
+                <!--                        android:src="@drawable/p2" />-->
+
+                <!--                </com.google.android.material.card.MaterialCardView>-->
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="-150dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+                android:layout_marginBottom="8dp"
+                android:text="Google Map"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="6dp">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="220dp"
+                    android:layout_margin="6dp"
+                    android:layout_weight="1">
+
+                    <fragment
+                        android:id="@+id/map"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:context="com.example.mapwithmarker.MapsMarkerActivity" />
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="8dp"
+                android:gravity="center"
+                android:text="Version 1.0"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textStyle="italic" />
+
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 

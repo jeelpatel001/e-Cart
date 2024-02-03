@@ -12,4 +12,7 @@ public class Constants {
     public static String NEWS_IMAGE_URL = API_BASE_URL + "/uploads/news/";
     public static String CATEGORIES_IMAGE_URL = API_BASE_URL + "/uploads/category/";
     public static String PRODUCTS_IMAGE_URL = API_BASE_URL + "/uploads/product/";
+    public static String CATEGORY_COUNT = API_BASE_URL + "/services/getAllCategoryCount";
+    public static String PRODUCT_COUNT = API_BASE_URL + "/services/getAllProductCount";
+
 }
