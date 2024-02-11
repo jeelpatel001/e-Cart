@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +39,12 @@ public class AdminDocumentsAdapter extends RecyclerView.Adapter<AdminDocumentsAd
         Glide.with(context)
                 .load(doc.getDocImage())
                 .into(holder.binding.imageView);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
     }
 
@@ -45,7 +53,7 @@ public class AdminDocumentsAdapter extends RecyclerView.Adapter<AdminDocumentsAd
         return documents.size();
     }
 
-    public class AdminDocumentsHolder extends RecyclerView.ViewHolder {
+    public static class AdminDocumentsHolder extends RecyclerView.ViewHolder {
         ItemAdminDocumentsBinding binding;
 
         public AdminDocumentsHolder(@NonNull View itemView) {

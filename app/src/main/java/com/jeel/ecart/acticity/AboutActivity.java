@@ -4,8 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -13,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,7 +32,12 @@ import com.jeel.ecart.adapter.AdminDocumentsAdapter;
 import com.jeel.ecart.adapter.OffersAdapter;
 import com.jeel.ecart.databinding.ActivityAboutBinding;
 import com.jeel.ecart.helper.Constants;
+import com.jeel.ecart.models.Category;
 import com.jeel.ecart.models.Documents;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -33,6 +46,9 @@ public class AboutActivity extends AppCompatActivity implements OnMapReadyCallba
     ActivityAboutBinding binding;
     AdminDocumentsAdapter adminDocumentsAdapter;
     ArrayList<Documents> documents;
+    String location;
+    Float string1;
+    Float string2;
 
 
     @Override
@@ -41,8 +57,6 @@ public class AboutActivity extends AppCompatActivity implements OnMapReadyCallba
         binding = ActivityAboutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
 
         binding.topAppBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,17 +66,7 @@ public class AboutActivity extends AppCompatActivity implements OnMapReadyCallba
         });
 
         documents = new ArrayList<>();
-
-        documents.add(new Documents("https://img.freepik.com/free-psd/vertical-poster-template-streetwear-fashion-shopping_23-2150573120.jpg"));
-        documents.add(new Documents("https://img.freepik.com/premium-psd/vertical-poster-template-thrift-shop-fashion-sale_23-2148979804.jpg"));
-        documents.add(new Documents("https://img.freepik.com/free-psd/vertical-poster-retail-sale_23-2148758255.jpg"));
-        documents.add(new Documents("https://img.freepik.com/free-vector/flat-supermarket-vertical-poster-template_23-2149376447.jpg"));
-        documents.add(new Documents("https://content.wepik.com/statics/13264850/preview-page0.jpg"));
-        documents.add(new Documents("https://img.freepik.com/free-psd/vertical-poster-template-streetwear-fashion-shopping_23-2150573120.jpg"));
-        documents.add(new Documents("https://img.freepik.com/premium-psd/vertical-poster-template-thrift-shop-fashion-sale_23-2148979804.jpg"));
-        documents.add(new Documents("https://img.freepik.com/free-psd/vertical-poster-retail-sale_23-2148758255.jpg"));
-        documents.add(new Documents("https://img.freepik.com/free-vector/flat-supermarket-vertical-poster-template_23-2149376447.jpg"));
-        documents.add(new Documents("https://content.wepik.com/statics/13264850/preview-page0.jpg"));
+        getAdminData();
 
         adminDocumentsAdapter = new AdminDocumentsAdapter(this, documents);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -73,6 +77,22 @@ public class AboutActivity extends AppCompatActivity implements OnMapReadyCallba
 
         getCategoriesCount();
         getProductCount();
+
+        if (isMobileDataAvailable()) {
+            // Mobile data is available
+            binding.networkError.setVisibility(View.GONE);
+        } else {
+            // Mobile data is not available
+            binding.offline.setVisibility(View.GONE);
+            binding.networkError.setVisibility(View.VISIBLE);
+        }
+
+        binding.retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recreate();
+            }
+        });
 
     }
 
@@ -114,16 +134,126 @@ public class AboutActivity extends AppCompatActivity implements OnMapReadyCallba
         queue.add(stringRequest);
     }
 
+    void getAdminData() {
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Request.Method.GET, Constants.ADMIN_DATA, response -> {
+            try {
+
+                JSONObject mainObj = new JSONObject(response);
+                binding.shopName.setText(mainObj.getString("aShopName"));
+                binding.shopOwnerName.setText(mainObj.getString("aShopOwnerName"));
+                binding.shopAddress.setText(mainObj.getString("aShopAddress"));
+
+                location = mainObj.getString("google_cordinate");
+
+
+                String inputString = location;
+                String[] result = inputString.split(", ");
+
+                if (result.length == 2) {
+                     string1 = Float.valueOf(result[0]);
+                     string2 = Float.valueOf(result[1]);
+                    Log.d("Jeel","String 1: " + string1 + " String 2: " + string2);
+
+
+                    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                    mapFragment.getMapAsync(this);
+                } else {
+                    Log.d("Jeel","Input string does not contain a comma.");
+                }
+
+
+                binding.call.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String posted_by = null;
+                        try {
+                            posted_by = mainObj.getString("aShopNumber");
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        String uri = "tel:" + posted_by.trim();
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse(uri));
+                        startActivity(intent);
+                    }
+                });
+
+                binding.whatsapp.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String phoneNumberWithCountryCode = null;
+                        try {
+                            phoneNumberWithCountryCode = mainObj.getString("aShopWpNumber");
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                        String message = "Hallo";
+
+                        startActivity(
+                                new Intent(Intent.ACTION_VIEW,
+                                        Uri.parse(
+                                                String.format("https://api.whatsapp.com/send?phone=%s&text=%s", phoneNumberWithCountryCode, message)
+                                        )
+                                )
+                        );
+                    }
+                });
+
+                Glide.with(this)
+                        .load(Constants.DOCUMENTS_IMAGE_URL + mainObj.getString("userImage"))
+                        .into(binding.userImage);
+                for (int i = 1; i <= 6; i++) {
+                    String name = "doc" + i;
+                    if (mainObj.getString(name).equals("")) {
+//                        binding.docTitle.setVisibility(View.GONE);
+                    } else {
+//                        binding.docTitle.setVisibility(View.VISIBLE);
+                        documents.add(new Documents(Constants.DOCUMENTS_IMAGE_URL + mainObj.getString(name)));
+                    }
+
+                    adminDocumentsAdapter.notifyDataSetChanged();
+
+                    binding.offline.setVisibility(View.GONE);
+                    binding.nestedScrollView.setVisibility(View.VISIBLE);
+
+                }
+
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+
+        queue.add(request);
+    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
-        LatLng myLocation = new LatLng(22.302056769040426, 70.7989762892026);
+        LatLng myLocation = new LatLng(string1, string2);
         googleMap.addMarker(new MarkerOptions()
                 .position(myLocation)
                 .title("Our Shop"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 6.03f));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 12.03f));
     }
 
+
+    public boolean isMobileDataAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
 }

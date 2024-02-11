@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         categoryAdaptor = new CategoryAdaptor(this, categories);
 
         getCategories();
-
+//
 //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 //        linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
 //        binding.categoriesList.setLayoutManager(linearLayoutManager);
@@ -175,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
         binding.categoriesList.setAdapter(categoryAdaptor);
 
     }
-
 
     void getCategories() {
 
@@ -248,9 +247,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean isMobileDataAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected() && activeNetworkInfo.getType() == ConnectivityManager.TYPE_MOBILE;
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 }
