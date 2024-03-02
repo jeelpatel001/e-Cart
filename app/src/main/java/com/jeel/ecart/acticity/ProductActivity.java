@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.hishd.tinycart.model.Cart;
 import com.hishd.tinycart.util.TinyCartHelper;
 import com.jeel.ecart.adapter.ImageAdapter;
@@ -37,7 +38,7 @@ public class ProductActivity extends AppCompatActivity {
     ActivityProductBinding binding;
     Product currentProduct;
     Cart cart;
-    //    String image;
+    String image;
     ImageAdapter adapter;
 
     @Override
@@ -54,9 +55,7 @@ public class ProductActivity extends AppCompatActivity {
 
 
         String name = getIntent().getStringExtra("name");
-
-//        image = getIntent().getStringExtra("image");
-
+        image = getIntent().getStringExtra("image");
         int id = getIntent().getIntExtra("id", 0);
         double price = getIntent().getDoubleExtra("price", 0);
 
@@ -146,20 +145,40 @@ public class ProductActivity extends AppCompatActivity {
 
                         JSONArray productImage = product.getJSONArray("product_images");
 
-                        for (int i = 0; i < productImage.length(); i++) {
-                            JSONObject childObj = productImage.getJSONObject(i);
+                        Log.d("Jeel", "PRODUCT Length : " + productImage.length());
 
-                            Log.d("Jeel", "PRODUCT IMAGE : " + productImage);
-                            Log.d("Jeel", "PRODUCT IMAGE : " + childObj);
+                        if (productImage.length() == 0) {
+                            binding.recycler.setVisibility(View.GONE);
+                            binding.imageView.setVisibility(View.VISIBLE);
+                            Glide.with(ProductActivity.this)
+                                    .load(Constants.PRODUCTS_IMAGE_URL + product.getString("image"))
+                                    .into(binding.imageView);
+                            binding.imageView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    try {
+                                        startActivity(new Intent(ProductActivity.this, ImageViewActivity.class).putExtra("image", Constants.PRODUCTS_IMAGE_URL + product.getString("image")),
+                                                ActivityOptions.makeSceneTransitionAnimation(ProductActivity.this, binding.imageView, "image").toBundle());
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                            });
+                        } else {
+                            binding.recycler.setVisibility(View.VISIBLE);
+                            binding.imageView.setVisibility(View.GONE);
+                            for (int i = 0; i < productImage.length(); i++) {
+                                JSONObject childObj = productImage.getJSONObject(i);
 
-                            arrayList.add(Constants.PRODUCTS_IMAGE_URL + childObj.getString("name"));
+                                Log.d("Jeel", "PRODUCT IMAGE : " + productImage);
+                                Log.d("Jeel", "PRODUCT IMAGE : " + childObj);
 
+                                arrayList.add(Constants.PRODUCTS_IMAGE_URL + childObj.getString("name"));
+
+                            }
+                            adapter.notifyDataSetChanged();
                         }
-                        adapter.notifyDataSetChanged();
 
-                        binding.addToCart.setVisibility(View.VISIBLE);
-                        binding.offline.setVisibility(View.GONE);
-                        binding.nestedScrollView.setVisibility(View.VISIBLE);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -172,6 +191,11 @@ public class ProductActivity extends AppCompatActivity {
             }
         });
         queue.add(request);
+
+
+        binding.addToCart.setVisibility(View.VISIBLE);
+        binding.offline.setVisibility(View.GONE);
+        binding.nestedScrollView.setVisibility(View.VISIBLE);
     }
 
     public boolean isMobileDataAvailable() {
