@@ -1,16 +1,17 @@
 package com.jeel.ecart.acticity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
+import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,24 +19,26 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 import com.hishd.tinycart.model.Cart;
 import com.hishd.tinycart.util.TinyCartHelper;
+import com.jeel.ecart.adapter.ImageAdapter;
 import com.jeel.ecart.databinding.ActivityProductBinding;
 import com.jeel.ecart.helper.Constants;
 import com.jeel.ecart.models.Product;
 
-import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class ProductActivity extends AppCompatActivity {
 
     ActivityProductBinding binding;
     Product currentProduct;
     Cart cart;
-    String image;
+    //    String image;
+    ImageAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +54,15 @@ public class ProductActivity extends AppCompatActivity {
 
 
         String name = getIntent().getStringExtra("name");
-        image = getIntent().getStringExtra("image");
+
+//        image = getIntent().getStringExtra("image");
+
         int id = getIntent().getIntExtra("id", 0);
         double price = getIntent().getDoubleExtra("price", 0);
 
         binding.productTitle.setText(name);
         binding.productPrice.setText("Rs. " + price);
-//
-//        Glide.with(this)
-//                .load(image)
-//                .into(binding.productImageView);
-
-        getProductDetails(id);
+        initImage(id);
 
         binding.addToCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,10 +98,28 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
+    ArrayList<String> arrayList;
+
+    void initImage(int id) {
+
+        arrayList = new ArrayList<>();
+
+        getProductDetails(id);
+
+        adapter = new ImageAdapter(ProductActivity.this, arrayList);
+        binding.recycler.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new ImageAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(ImageView imageView, String path) {
+                startActivity(new Intent(ProductActivity.this, ImageViewActivity.class).putExtra("image", path),
+                        ActivityOptions.makeSceneTransitionAnimation(ProductActivity.this, imageView, "image").toBundle());
+            }
+        });
+    }
+
     void getProductDetails(int id) {
-
         RequestQueue queue = Volley.newRequestQueue(this);
-
         String url = Constants.GET_PRODUCT_DETAILS_URL + id;
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -116,7 +134,6 @@ public class ProductActivity extends AppCompatActivity {
                                 Html.fromHtml(description)
                         );
 
-
                         currentProduct = new Product(
                                 product.getString("name"),
                                 Constants.PRODUCTS_IMAGE_URL + product.getString("image"),
@@ -129,23 +146,16 @@ public class ProductActivity extends AppCompatActivity {
 
                         JSONArray productImage = product.getJSONArray("product_images");
 
-                        if (productImage.length() == 0) {
-                            binding.carousel.addData(new CarouselItem(image));
-                        } else {
+                        for (int i = 0; i < productImage.length(); i++) {
+                            JSONObject childObj = productImage.getJSONObject(i);
 
-                            for (int i = 0; i < productImage.length(); i++) {
-                                JSONObject childObj = productImage.getJSONObject(i);
+                            Log.d("Jeel", "PRODUCT IMAGE : " + productImage);
+                            Log.d("Jeel", "PRODUCT IMAGE : " + childObj);
 
-                                Log.d("Jeel", "PRODUCT IMAGE : " + productImage);
-                                Log.d("Jeel", "PRODUCT IMAGE : " + childObj);
+                            arrayList.add(Constants.PRODUCTS_IMAGE_URL + childObj.getString("name"));
 
-                                binding.carousel.addData(
-                                        new CarouselItem(
-                                                Constants.PRODUCTS_IMAGE_URL + childObj.getString("name")
-                                        )
-                                );
-                            }
                         }
+                        adapter.notifyDataSetChanged();
 
                         binding.addToCart.setVisibility(View.VISIBLE);
                         binding.offline.setVisibility(View.GONE);
@@ -161,7 +171,6 @@ public class ProductActivity extends AppCompatActivity {
 
             }
         });
-
         queue.add(request);
     }
 

@@ -41,7 +41,7 @@ public class CartActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Prevent Screen Shots
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,WindowManager.LayoutParams.FLAG_SECURE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
 
         products = new ArrayList<>();
@@ -61,7 +61,7 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
-        if (cartAdaptor.getItemCount() != 0){
+        if (cartAdaptor.getItemCount() != 0) {
             binding.cartBottom.setVisibility(View.VISIBLE);
             binding.offline.setVisibility(View.GONE);
         }
@@ -83,7 +83,7 @@ public class CartActivity extends AppCompatActivity {
         binding.topAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.clearCart){
+                if (item.getItemId() == R.id.clearCart) {
                     cart.clearCart();
                     return true;
                 }

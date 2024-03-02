@@ -29,7 +29,7 @@
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_anchorGravity="center"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -38,54 +38,39 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content">-->
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="250dp"
+                android:layout_marginTop="10sp"
+                app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager" />
+            <!--                <org.imaginativeworld.whynotimagecarousel.ImageCarousel-->
+            <!--                    android:id="@+id/carousel"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="250dp"-->
+            <!--                    app:autoPlay="false"-->
+            <!--                    app:bottomShadowAlpha="0.1"-->
+            <!--                    app:bottomShadowHeight="20dp"-->
+            <!--                    app:carouselType="BLOCK"-->
+            <!--                    app:imageScaleType="fitCenter"-->
+            <!--                    app:infiniteCarousel="true"-->
+            <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                    app:layout_constraintStart_toStartOf="parent"-->
+            <!--                    app:layout_constraintTop_toTopOf="parent"-->
+            <!--                    app:showBottomShadow="true"-->
+            <!--                    app:showCaption="false"-->
+            <!--                    app:showNavigationButtons="false"-->
+            <!--                    app:showTopShadow="true"-->
+            <!--                    app:topShadowAlpha="0.1"-->
+            <!--                    app:topShadowHeight="20dp" />-->
 
-                <!--                <ImageView-->
-                <!--                    android:id="@+id/productImageView"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="250dp"-->
-                <!--                    android:src="@drawable/image_placeholder"-->
-                <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-                <!--                    app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                    app:layout_constraintStart_toStartOf="parent"-->
-                <!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
-                <org.imaginativeworld.whynotimagecarousel.ImageCarousel
-                    android:id="@+id/carousel"
-                    app:imageScaleType="fitCenter"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    app:autoPlay="false"
-                    app:bottomShadowAlpha="0.1"
-                    app:bottomShadowHeight="20dp"
-                    app:carouselType="BLOCK"
-                    app:infiniteCarousel="true"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:showBottomShadow="true"
-                    app:showCaption="false"
-                    app:showNavigationButtons="false"
-                    app:showTopShadow="true"
-                    app:topShadowAlpha="0.1"
-                    app:topShadowHeight="20dp" />
-
-                <Button
-                    android:visibility="invisible"
-                    android:id="@+id/addToCart"
-                    style="?attr/materialIconButtonFilledTonalStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:text="  SELECT"
-                    app:icon="@drawable/shopping_cart_add_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/carousel" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
 
             <TextView
                 android:id="@+id/productTitle"
@@ -105,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:text="Rs. 3999"
+                android:text="Rs. "
                 android:textAppearance="?attr/textAppearanceTitleLarge"
                 android:textColor="@color/md_theme_dark_onPrimary"
                 android:textStyle="bold"
@@ -174,4 +159,14 @@
             android:text="Retry" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/addToCart"
+        style="?attr/materialIconButtonFilledTonalStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="8dp"
+        android:text="  SELECT"
+        android:visibility="invisible"
+        app:icon="@drawable/shopping_cart_add_24" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
